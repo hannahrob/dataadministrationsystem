@@ -4,47 +4,25 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
+@Entity
+
 public class DrugEffects {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long drugEffectsId;
-    private String drugEffects;
+    private String effects;
     @ManyToOne
     @JoinColumn(name = "drug_id")
-    private Drug drug;
+    private DrugEntity drug;
 
     public DrugEffects() {
     }
-    public DrugEffects(Long drugEffectsId, String drugEffects, Drug drug) {
+    public DrugEffects(Long drugEffectsId, String effects, DrugEntity drug) {
         this.drugEffectsId = drugEffectsId;
-        this.drugEffects = drugEffects;
+        this.effects = effects;
         this.drug = drug;
     }
 
-    public Long getDrugEffectsId() {
-        return drugEffectsId;
-    }
-
-    public void setDrugEffectsId(Long drugEffectsId) {
-        this.drugEffectsId = drugEffectsId;
-    }
-
-    public String getDrugEffects() {
-        return drugEffects;
-    }
-
-    public void setDrugEffects(String drugEffects) {
-        this.drugEffects = drugEffects;
-    }
-
-    public Drug getDrug() {
-        return drug;
-    }
-
-    public void setDrug(Drug drug) {
-        this.drug = drug;
-    }
 }
