@@ -1,10 +1,9 @@
 package pharmacy.drug_admin_system.service;
 
 import org.springframework.stereotype.Service;
-import pharmacy.drug_admin_system.dto.DrugsDto;
-import pharmacy.drug_admin_system.entity.DrugEntity;
-import pharmacy.drug_admin_system.entity.DrugEffects;
-import pharmacy.drug_admin_system.repository.DrugEffectsRepository;
+import pharmacy.drug_admin_system.dto.ConcentrationDto;
+import pharmacy.drug_admin_system.dto.DrugDto;
+import pharmacy.drug_admin_system.entity.Drug;
 import pharmacy.drug_admin_system.repository.DrugRepository;
 
 import java.util.List;
@@ -12,22 +11,11 @@ import java.util.List;
 @Service
 public class DrugService {
     DrugRepository drugRepository;
-    DrugEffectsRepository drugEffectsRepository;
 
-    public DrugService(DrugRepository drugRepository, DrugEffectsRepository drugEffectsRepository) {
+    public DrugService(DrugRepository drugRepository) {
         this.drugRepository = drugRepository;
-        this.drugEffectsRepository = drugEffectsRepository;
     }
-
-
-//    public String createDrug(DrugEntity drug) {
-//        for(DrugEffects drugEffects: drug.getSideEffects()) {
-//            drugEffects.setDrug(drug);
-//        }
-//        drugRepository.save(drug);
-//        return "Drug Created Successfully";
-//    }
-    public String createDrug(DrugsDto drug) {
+    public String createDrug(DrugDto drug) {
         try {
 //            // Check if the drug already exists (by name and manufacturer maybe)
 //            Optional<DrugEntity> existingDrug = drugRepository.findByDrugNameAndManufacturer(
@@ -36,33 +24,28 @@ public class DrugService {
 //            if (existingDrug.isPresent()) {
 //                return "Drug already exists.";
 //            }
+            ConcentrationDto concentrationDto = new ConcentrationDto();  // Create an instance
+            String concentration = Double.toString(concentrationDto.getValue()) + concentrationDto.getUnit().toString();
 
             // Create and save new DrugEntity
-            DrugEntity entity = new DrugEntity();
+            Drug entity = new Drug();
             entity.setDrugName(drug.getDrugName());
             entity.setManufacturer(drug.getManufacturer());
             entity.setPrecautions(drug.getPrecautions());
             entity.setSideEffects(drug.getSideEffects());
+            entity.setConcentration(concentration);
+
 
             entity = drugRepository.save(entity);
-
-
-            DrugEffects drugEffects = new DrugEffects();
-            drugEffects.setDrug(entity);
-            drugEffects.setEffects(drug.getSideEffects().toString());
-
-            drugEffectsRepository.save(drugEffects);
 
         } catch (Exception e) {
             return "Failed to create drug. please try again";
         }
         return "Drug created successfully.";
     }
-
-
-    public String updateDrug(DrugsDto drug) {
+    public String updateDrug(DrugDto drug) {
         try {
-            DrugEntity entity = new DrugEntity();
+            Drug entity = new Drug();
             entity.setDrugName(drug.getDrugName());
             entity.setManufacturer(drug.getManufacturer());
             entity.setPrecautions(drug.getPrecautions());
@@ -70,17 +53,12 @@ public class DrugService {
 
             entity = drugRepository.save(entity);
 
-            DrugEffects drugEffects = new DrugEffects();
-            drugEffects.setDrug(entity);
-            drugEffects.setEffects(drug.getSideEffects().toString());
-
-            drugEffectsRepository.save(drugEffects);
         } catch (Exception e){
             return "Drug could not be updated. Please try again.";
         }
         return "Drug Updated Successfully";
     }
-    public DrugEntity getDrug(Long drugId) {
+    public Drug getDrug(Long drugId) {
         return drugRepository.findById(drugId).get();
     }
 
@@ -88,7 +66,7 @@ public class DrugService {
        drugRepository.deleteById(drugId);
         return "Success";
     }
-    public List<DrugEntity> getAllDrugs() {
+    public List<Drug> getAllDrugs() {
         return drugRepository.findAll();
     }
 

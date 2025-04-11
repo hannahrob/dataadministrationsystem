@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DrugsDto {
+public class DrugDto {
     private String drugName;
     private String manufacturer;
     private String precautions;
-    private List<String> sideEffects;
+    private String sideEffects;
 }
