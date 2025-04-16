@@ -7,6 +7,7 @@ import pharmacy.drug_admin_system.entity.Drug;
 import pharmacy.drug_admin_system.repository.DrugRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DrugService {
@@ -18,38 +19,52 @@ public class DrugService {
     public String createDrug(DrugDto drug) {
         try {
 //            // Check if the drug already exists (by name and manufacturer maybe)
-//            Optional<DrugEntity> existingDrug = drugRepository.findByDrugNameAndManufacturer(
-//                    drugDto.getDrugName(), drugDto.getManufacturer());
-//
+//            Optional<Drug> existingDrug = drugRepository.findByDrugShortCode(drugDto.getDrugShortCode());
 //            if (existingDrug.isPresent()) {
 //                return "Drug already exists.";
 //            }
-            ConcentrationDto concentrationDto = new ConcentrationDto();  // Create an instance
-            String concentration = Double.toString(concentrationDto.getValue()) + concentrationDto.getUnit().toString();
+            ConcentrationDto concentrationDto = drug.getConcentration();  // Create an instance
+            if (concentrationDto == null || concentrationDto.getUnit() == null) {
+                return "Concentration or unit is missing!";
+            }
 
-            // Create and save new DrugEntity
+            String concentration = concentrationDto.getValue() + " " + concentrationDto.getUnit().toString();
+
             Drug entity = new Drug();
             entity.setDrugName(drug.getDrugName());
+            entity.setDrugShortCode(drug.getDrugShortCode());
             entity.setManufacturer(drug.getManufacturer());
             entity.setPrecautions(drug.getPrecautions());
+            entity.setContraindications(drug.getContraindications());
             entity.setSideEffects(drug.getSideEffects());
+            entity.setDosageForm(drug.getDosageForm());
+            entity.setDrugType(drug.getDrugType());
             entity.setConcentration(concentration);
 
 
             entity = drugRepository.save(entity);
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "Failed to create drug. please try again";
         }
         return "Drug created successfully.";
     }
     public String updateDrug(DrugDto drug) {
         try {
+            ConcentrationDto concentrationDto = new ConcentrationDto();  // Create an instance
+            String concentration = Double.toString(concentrationDto.getValue()) + concentrationDto.getUnit().toString();
+
             Drug entity = new Drug();
             entity.setDrugName(drug.getDrugName());
             entity.setManufacturer(drug.getManufacturer());
             entity.setPrecautions(drug.getPrecautions());
+            entity.setContraindications(drug.getContraindications());
             entity.setSideEffects(drug.getSideEffects());
+            entity.setDosageForm(drug.getDosageForm());
+            entity.setDrugType(drug.getDrugType());
+            entity.setConcentration(concentration);
+
 
             entity = drugRepository.save(entity);
 

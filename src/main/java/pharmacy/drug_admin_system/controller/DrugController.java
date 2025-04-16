@@ -13,24 +13,23 @@ import java.util.List;
 public class DrugController {
      private final DrugService drugService;
 
-    @PostMapping
+    @PostMapping("/create-drug")
     public String addDrug(@RequestBody DrugDto drug){
        return drugService.createDrug(drug);
     }
-    @PutMapping
+    @PutMapping("/update-drug")
     public String updateDrug(@RequestBody DrugDto drug){
         return drugService.updateDrug(drug);
     }
-    @DeleteMapping("{drugId}")
+    @DeleteMapping("/delete-drug/{drugId}")
     public String removeDrug(@PathVariable Long drugId) {
         return drugService.deleteDrug(drugId);
     }
-    @GetMapping("{drugId}")
+    @GetMapping("/get-drug/{drugId}")
     public pharmacy.drug_admin_system.entity.Drug getDrugDetails(@PathVariable("drugId") Long drugId){
         return drugService.getDrug(drugId);
     }
-
-    @GetMapping("/all-drugs")
+    @GetMapping("/get-all-drugs")
     public List<pharmacy.drug_admin_system.entity.Drug> getAllDrugDetails(){
         return drugService.getAllDrugs();
     }
